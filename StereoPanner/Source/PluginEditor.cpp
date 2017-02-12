@@ -34,6 +34,12 @@ StereoPannerAudioProcessorEditor::StereoPannerAudioProcessorEditor (StereoPanner
     startTimer(200);//starts timer with interval of 200mS
     //[/Constructor_pre]
 
+    addAndMakeVisible (sliderPanPosition = new Slider ("new slider"));
+    sliderPanPosition->setRange (-1, 1, 0);
+    sliderPanPosition->setSliderStyle (Slider::Rotary);
+    sliderPanPosition->setTextBoxStyle (Slider::TextBoxAbove, false, 80, 20);
+    sliderPanPosition->addListener (this);
+
 
     //[UserPreSize]
     //[/UserPreSize]
@@ -50,6 +56,7 @@ StereoPannerAudioProcessorEditor::~StereoPannerAudioProcessorEditor()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
+    sliderPanPosition = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -73,8 +80,25 @@ void StereoPannerAudioProcessorEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
+    sliderPanPosition->setBounds (64, 8, 240, 144);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
+}
+
+void StereoPannerAudioProcessorEditor::sliderValueChanged (Slider* sliderThatWasMoved)
+{
+    //[UsersliderValueChanged_Pre]
+    //[/UsersliderValueChanged_Pre]
+
+    if (sliderThatWasMoved == sliderPanPosition)
+    {
+        //[UserSliderCode_sliderPanPosition] -- add your slider handling code here..
+        processor.panPosition = sliderPanPosition->getValue();
+        //[/UserSliderCode_sliderPanPosition]
+    }
+
+    //[UsersliderValueChanged_Post]
+    //[/UsersliderValueChanged_Post]
 }
 
 
@@ -83,7 +107,7 @@ void StereoPannerAudioProcessorEditor::resized()
 void StereoPannerAudioProcessorEditor::timerCallback()
 {
 //[/MiscUserCode]
-}
+
 
 //==============================================================================
 #if 0
@@ -100,6 +124,10 @@ BEGIN_JUCER_METADATA
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="0" initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ffffffff"/>
+  <SLIDER name="new slider" id="b0162153c9c74b76" memberName="sliderPanPosition"
+          virtualName="" explicitFocusOrder="0" pos="64 8 240 144" min="-1"
+          max="1" int="0" style="Rotary" textBoxPos="TextBoxAbove" textBoxEditable="1"
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1" needsCallback="1"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
@@ -109,3 +137,4 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+}
