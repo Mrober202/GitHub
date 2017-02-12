@@ -135,14 +135,18 @@ void StereoPannerAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        float* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
-    }
+    // Retrieve the total number of samples in the buffer for this block
+    int numSamples = buffer.getNumSamples();
+    // channelDataL and channelDataR are pointers to arrays of length numSamples which // contain the audio for one channel. You repeat this for each channel
+    float *channelDataL = buffer.getWritePointer(0);
+    float *channelDataR = buffer.getWritePointer(1);
+    // calculate p’
+    float pDash = (panPosition + 1.0) / 2.0;
+    // Loop runs from 0 to number of samples in the block
+    for (int i = 0; i < numSamples; ++i) {
+        // Simple linear panning algorithm where:
+        channelDataL[i] = channelDataL[i] * (1.0 - pDash);
+        channelDataR[i] = channelDataR[i] * pDash; }
 }
 
 //==============================================================================
